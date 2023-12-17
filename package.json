@@ -1,0 +1,30 @@
+{
+  "name": "node-section-2",
+  "version": "1.0.0",
+  "description": "Complete Node.js Section 2",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "author": "Kaan Özer",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-handlebars": "3.0",
+    "moment-timezone": "^0.5.43",
+    "mongodb": "^6.2.0",
+    "mongoose": "^8.0.3",
+    "mysql2": "^3.6.2",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^3.3.2",
+    "pug": "^3.0.2",
+    "sequelize": "^6.33.0",
+    "webhook-discord": "^3.7.8"
+  }
+}

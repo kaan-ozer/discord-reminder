@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@100;300;400;500;700;900&display=swap');
+
+.container-fluid {
+  font-family: 'Inter', sans-serif;
+  font-family: 'Roboto', sans-serif;
+  background-image: url('../img/entrance.png');
+  background-size: cover;
+  background-position: center;
+
+  /* background-image: linear-gradient(
+    to right top,
+    #1dc0b0,
+    #00bcb9,
+    #00b7c0,
+    #00b2c5,
+    #00adc9,
+    #00a7c9,
+    #00a0c9,
+    #099ac8,
+    #0291c5,
+    #0888c1,
+    #157fbc,
+    #2176b7
+  ); */
+}
+.welcome--page__entrance {
+  background-color: rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 90dvh;
+}
+
+.welcome--page__title {
+  font-size: 10vw;
+  color: #f8f9fa;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.welcome--page__subtitle {
+  font-size: 1.5vw;
+}
+
+.btn a {
+  color: black;
+  text-decoration: none;
+}
+
+.btn {
+  width: 28vw;
+  background-color: #f8f9fa;
+  border: none;
+}
+
+.btn:hover {
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  transform: scale(1.05);
+  transition: all 0.6s ease-out;
+
+  color: #fff;
+}
+
+@media screen and (max-width: 700px) {
+  .welcome--page__entrance {
+    height: 100dvh !important;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .welcome--page__title {
+    font-size: 20vw;
+  }
+  .welcome--page__subtitle {
+    font-size: 3vw;
+  }
+
+  .btn {
+    width: 60vw;
+  }
+}

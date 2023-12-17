@@ -1,0 +1,28 @@
+<%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/welcome.css">
+</head>
+
+<body>
+        <div class="container-fluid h-100  " >
+            <div class="row align-items-center justify-content-center h-100 ">
+                <div class="welcome--page__entrance col-12 col-sm-11  rounded-3 p-3"  >
+                    <div class="square d-flex flex-column  align-items-center justify-content-center">
+                
+                        <div class="  mb-5 d-flex  flex-column   align-items-center justify-content-center">
+                            <h1 class=" mb-3 ms-4 welcome--page__title">Welcome</h1>
+                            <p  class="welcome--page__subtitle" style="font-size: 3  rem;font-weight: bold;text-shadow: 2px 2px #000 ;color:#f8f9fa;;">Select the service to proceed!!</p>
+                        </div>
+                        
+                        <div class="d-flex flex-column">
+                            <button type="button" class=" btn btn-light mb-3 shadow"  >
+                                <a href="/domains">Domain Remainder</a>
+                            </button>
+                            <button type="button" class="btn btn-light mb-3 shadow disabled">
+                                <a href="/domains">Add a New Remainder</a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<%- include('../includes/end.ejs') %>

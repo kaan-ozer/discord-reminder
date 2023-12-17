@@ -1,0 +1,24 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "skipFiles": ["<node_internals>/**"],
+      //hangi sekmede olursan ol app js le başlatır debugger ı çünkü serveri oluşturan o
+      "program": "${workspaceFolder}/app.js",
+      //nodemon u kullan ve her değişiklikde debugger da yeniden başlasın
+      "restart": true,
+      "runtimeExecutable": "nodemon",
+      //you can also change the console where things are logged to the integrated terminal
+      "console": "integratedTerminal"
+
+      //terminali kullanmalıyız çünkü debugger ve nodemon u ayrı ayrı çalıştırıyor ve debugger kapansa bile nodemon açık kalıyor ve onu kapatabilmek için ctrl c yapmalıyız debug console dan yapamayız bu yüzden de konsolu değiştriyior
+      //it fails because it doesn't look for nodemon locally, it looks for globally
+    }
+  ]
+}
