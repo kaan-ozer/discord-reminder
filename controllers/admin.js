@@ -100,7 +100,7 @@ exports.deleteDomain = (req, res, next) => {
   Domain.findByIdAndDelete(ID)
     .then(() => {
       console.log(req.url);
-      return res.status(204).end();
+      return res.redirect('/domains');
     })
     .catch((err) => {
       console.log(err);

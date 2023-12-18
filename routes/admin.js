@@ -14,7 +14,7 @@ router.get('/edit-domain/:ID', adminController.getEditDomain);
 
 router.post('/edit-domain/:ID', adminController.postEditDomain);
 
-router.delete('/domains/:ID', adminController.deleteDomain);
+router.post('/domains/:ID', adminController.deleteDomain);
 
 // service to send messages
 router.get('/send-message', adminController.sendMessage);
