@@ -1,18 +1,138 @@
 const Domain = require('../models/domain');
+const Reminder = require('../models/reminder');
 const Log = require('../models/log');
-const moment = require('moment');
+const reminderHandler = require('../util/send-reminder');
+
 const webhook = require('webhook-discord');
 
 exports.getIndex = (req, res, next) => {
-  res.render('main/index', { pageTitle: 'Set Your Remainder!', path: req.url });
+  res.render('main/index', { pageTitle: 'Set Your reminder!', path: req.url });
 };
+
+// GET -> '/reminders'
+exports.getReminders = (req, res, next) => {
+  Reminder.find()
+    .then((reminders) => {
+      res.render('reminders/index', {
+        pageTitle: 'reminders',
+        reminders: reminders,
+        editing: false,
+        path: req.url,
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+// POST -> '/reminders'
+exports.postReminder = (req, res, next) => {
+  const title = req.body.title;
+  const minute = req.body.minute;
+  const hour = req.body.hour;
+  const dayOfMonth = req.body.dayOfMonth;
+  const month = req.body.month;
+  const dayOfWeek = req.body.dayOfWeek;
+
+  const reminder = new Reminder({
+    title: title,
+    minute: minute,
+    hour: hour,
+    dayOfMonth: dayOfMonth,
+    month: month,
+    dayOfWeek: dayOfWeek,
+  });
+
+  reminder
+    .save()
+    .then((result) => {
+      console.log(result);
+      res.status(201).redirect('/reminders');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+  const cronExpression = `${minute} ${hour} ${dayOfMonth} ${month} ${dayOfWeek}`;
+
+  reminderHandler.sendReminder(reminder._id, cronExpression, 'task');
+};
+
+// GET -> '/edit-domain/:ID'
+exports.getEditReminder = (req, res, next) => {
+  const ID = req.params.ID;
+  Reminder.findById(ID)
+    .then((reminder) => {
+      Reminder.find().then((reminders) => {
+        return res.render('reminders/index', {
+          pageTitle: 'Edit Reminder',
+          selectedReminder: reminder,
+          reminders: reminders,
+          editing: true,
+          path: req.url,
+        });
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+// POST -> '/edit-reminder/:ID'
+exports.postEditReminder = (req, res, next) => {
+  reminderHandler.cancelTask(ID);
+
+  const ID = req.params.ID;
+  const title = req.body.title;
+  const minute = req.body.minute;
+  const hour = req.body.hour;
+  const dayOfMonth = req.body.dayOfMonth;
+  const month = req.body.month;
+  const dayOfWeek = req.body.dayOfWeek;
+
+  Reminder.findById(ID)
+    .then((reminder) => {
+      reminder.title = title;
+      reminder.minute = minute;
+      reminder.hour = hour;
+      reminder.dayOfMonth = dayOfMonth;
+      reminder.month = month;
+      reminder.dayOfWeek = dayOfWeek;
+
+      return reminder.save();
+    })
+    .then(() => {
+      const cronExpression = `${minute} ${hour} ${dayOfMonth} ${month} ${dayOfWeek}`;
+      reminderHandler.sendReminder(ID, cronExpression, 'task');
+      res.redirect('/reminders');
+    })
+    .catch((error) => {
+      console.error('Update failed:', error);
+    });
+};
+
+// POST -> '/reminders/:ID'
+exports.deleteReminder = (req, res, next) => {
+  const ID = req.params.ID;
+  Reminder.findByIdAndDelete(ID)
+    .then(() => {
+      console.log(req.url);
+      reminderHandler.cancelTask(ID);
+      return res.redirect('/reminders');
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+// --------------------
 
 // GET -> '/domains'
 exports.getDomains = (req, res, next) => {
   Domain.find()
     .then((domains) => {
-      res.render('domain-remainder/index', {
-        pageTitle: 'Domain Remainder',
+      res.render('domain-reminder/index', {
+        pageTitle: 'Domain reminder',
         path: req.url,
         editing: false,
         domains: domains,
@@ -55,7 +175,7 @@ exports.getEditDomain = (req, res, next) => {
   Domain.findById(ID)
     .then((domain) => {
       Domain.find().then((domains) => {
-        return res.render('domain-remainder/index', {
+        return res.render('domain-reminder/index', {
           pageTitle: 'Edit Domain',
           path: req.url,
           editing: true,
@@ -107,7 +227,68 @@ exports.deleteDomain = (req, res, next) => {
     });
 };
 
-exports.sendMessage = (req, res, next) => {
+exports.remindTask = (req, res, next) => {
+  Reminder.findById(req.params.ID)
+    .then((reminder) => {
+      const DISCORD_WEBHOOKHEADER = 'Task Reminder';
+      const DISCORD_WEBHOOKURL =
+        'https://discordapp.com/api/webhooks/1179346381157171240/EDgquEvgHuTWGpWpku9jmyI7Fm-5j-xjITnGhry-X1OjrZqmLXZ4nQyBrJh8vS7Eei3N';
+
+      async function sendDiscord(message) {
+        try {
+          const Hook = new webhook.Webhook(DISCORD_WEBHOOKURL);
+          await Hook.info(DISCORD_WEBHOOKHEADER, message);
+        } catch (error) {
+          console.error('Error sending Discord message:', error);
+        }
+      }
+
+      let messageText = reminder.title;
+      messageText = `
+      ------------------------
+      ${messageText}
+      ------------------------
+      `;
+
+      // save log then redirect
+
+      const clientIP = req.ip;
+      const httpStatusCode = res.statusCode;
+      const receivers = ['kaanozer35@gmail.com'];
+      const currentDate = new Date();
+      res.data = messageText;
+
+      const log = new Log({
+        IP: clientIP,
+        response: messageText,
+        receivers: receivers,
+        http_status: httpStatusCode,
+        date: currentDate,
+      });
+
+      log
+        .save()
+        .then((result) => {
+          sendDiscord(messageText);
+          console.log(res.data);
+          Reminder.findByIdAndDelete(req.params.ID)
+            .then((result) => {
+              return res.status(200);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })
+        .catch((err) => {
+          console.error('Error saving log:', err);
+        });
+    })
+    .catch((err) => {
+      console.error('Error fetching domains:', err);
+    });
+};
+
+exports.remindDomain = (req, res, next) => {
   Domain.find()
     .then((domains) => {
       let messageText = '';
@@ -182,8 +363,9 @@ exports.sendMessage = (req, res, next) => {
         date: currentDate,
       });
 
-      const DISCORD_WEBHOOKHEADER = 'Domain Remainder';
-      const DISCORD_WEBHOOKURL = 'yourDCurl';
+      const DISCORD_WEBHOOKHEADER = 'Domain Reminder';
+      const DISCORD_WEBHOOKURL =
+        'https://discordapp.com/api/webhooks/1179346381157171240/EDgquEvgHuTWGpWpku9jmyI7Fm-5j-xjITnGhry-X1OjrZqmLXZ4nQyBrJh8vS7Eei3N';
 
       async function sendDiscord(message) {
         try {

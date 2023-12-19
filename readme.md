@@ -1,4 +1,4 @@
-# domain-remainder
+# domain-reminder
 
 ## Description
 
@@ -9,7 +9,7 @@ These alerts are scheduled twice daily. Additionally, the application maintains 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/kaan-ozer/domain-remainder.git
+   git clone https://github.com/kaan-ozer/domain-reminder.git
    cd project
    ```
 2. Install dependencies:
@@ -23,4 +23,4 @@ A mandatory requirement for the application is to establish a connection to Mong
 
 ## Screen Shots
 
-![discordbot](https://github.com/kaan-ozer/domain-remainder/blob/main/screen-shots/Screenshot.png)
+![discordbot](https://github.com/kaan-ozer/domain-reminder/blob/main/screen-shots/Screenshot.png)
