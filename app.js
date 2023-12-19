@@ -43,7 +43,7 @@ reminderHandler.sendReminder(
 );
 
 mongoose
-  .connect('dbinfo')
+  .connect('yourdb')
   .then(() => {
     app.listen(4040);
   })

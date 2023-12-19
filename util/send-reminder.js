@@ -41,13 +41,15 @@ const sendReminder = (ID, cronExpression, type) => {
     }
   );
 
+  console.log('new reminder added');
   scheduledTasks[ID] = task;
+  console.log(scheduledTasks);
 };
 
 const cancelTask = (ID) => {
   const task = scheduledTasks[ID];
   if (task) {
-    console.log(scheduledTasks, task);
+    console.log('a task cancelled');
     task.stop();
     delete scheduledTasks[ID]; // scheduledTasks nesnesinden kaldır
     console.log(`Scheduled task for reminder ${ID} cancelled.`);

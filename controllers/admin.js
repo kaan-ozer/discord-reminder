@@ -80,8 +80,6 @@ exports.getEditReminder = (req, res, next) => {
 
 // POST -> '/edit-reminder/:ID'
 exports.postEditReminder = (req, res, next) => {
-  reminderHandler.cancelTask(ID);
-
   const ID = req.params.ID;
   const title = req.body.title;
   const minute = req.body.minute;
@@ -102,6 +100,7 @@ exports.postEditReminder = (req, res, next) => {
       return reminder.save();
     })
     .then(() => {
+      reminderHandler.cancelTask(ID);
       const cronExpression = `${minute} ${hour} ${dayOfMonth} ${month} ${dayOfWeek}`;
       reminderHandler.sendReminder(ID, cronExpression, 'task');
       res.redirect('/reminders');
@@ -231,8 +230,7 @@ exports.remindTask = (req, res, next) => {
   Reminder.findById(req.params.ID)
     .then((reminder) => {
       const DISCORD_WEBHOOKHEADER = 'Task Reminder';
-      const DISCORD_WEBHOOKURL =
-        'https://discordapp.com/api/webhooks/1179346381157171240/EDgquEvgHuTWGpWpku9jmyI7Fm-5j-xjITnGhry-X1OjrZqmLXZ4nQyBrJh8vS7Eei3N';
+      const DISCORD_WEBHOOKURL = '';
 
       async function sendDiscord(message) {
         try {
@@ -241,6 +239,15 @@ exports.remindTask = (req, res, next) => {
         } catch (error) {
           console.error('Error sending Discord message:', error);
         }
+
+        Reminder.findByIdAndDelete(req.params.ID)
+          .then((result) => {
+            console.log('sent then deleted');
+            res.redirect('/reminders');
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
 
       let messageText = reminder.title;
@@ -271,13 +278,7 @@ exports.remindTask = (req, res, next) => {
         .then((result) => {
           sendDiscord(messageText);
           console.log(res.data);
-          Reminder.findByIdAndDelete(req.params.ID)
-            .then((result) => {
-              return res.status(200);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+          return res.status(200);
         })
         .catch((err) => {
           console.error('Error saving log:', err);
@@ -364,8 +365,7 @@ exports.remindDomain = (req, res, next) => {
       });
 
       const DISCORD_WEBHOOKHEADER = 'Domain Reminder';
-      const DISCORD_WEBHOOKURL =
-        'https://discordapp.com/api/webhooks/1179346381157171240/EDgquEvgHuTWGpWpku9jmyI7Fm-5j-xjITnGhry-X1OjrZqmLXZ4nQyBrJh8vS7Eei3N';
+      const DISCORD_WEBHOOKURL = '';
 
       async function sendDiscord(message) {
         try {
