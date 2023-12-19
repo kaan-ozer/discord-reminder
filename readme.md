@@ -34,8 +34,8 @@ Additionally, user is also allowed set custom reminders as different from domain
 
 ## Screen Shots
 
-![discordbot](https://github.com/kaan-ozer/domain-reminder/public/img/screenshots/5.png)
-![discordbot](https://github.com/kaan-ozer/domain-reminder/public/img/screenshots/1.png)
-![discordbot](https://github.com/kaan-ozer/domain-reminder/public/img/screenshots/2.png)
-![discordbot](https://github.com/kaan-ozer/domain-reminder/public/img/screenshots/3.png)
-![discordbot](https://github.com/kaan-ozer/domain-reminder/public/img/screenshots/4.png)
+![discordbot](https://github.com/kaan-ozer/domain-reminder/blob/main/public/img/screenshots/5.png)
+![discordbot](https://github.com/kaan-ozer/domain-reminder/blob/main/public/img/screenshots/1.png)
+![discordbot](https://github.com/kaan-ozer/domain-reminder/blob/main/public/img/screenshots/2.png)
+![discordbot](https://github.com/kaan-ozer/domain-reminder/blob/main/public/img/screenshots/3.png)
+![discordbot](https://github.com/kaan-ozer/domain-reminder/blob/main/public/img/screenshots/4.png)
